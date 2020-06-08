@@ -24,7 +24,7 @@ python setup.py install
 
 ## Preparation
 
-#### Datasets
+### Datasets
 
 Currently, we support [Pittsburgh](https://www.cv-foundation.org/openaccess/content_cvpr_2013/papers/Torii_Visual_Place_Recognition_2013_CVPR_paper.pdf), [Tokyo 24/7](https://www.di.ens.fr/~josef/publications/Torii15.pdf) and [Tokyo Time Machine](https://arxiv.org/abs/1511.07247) datasets. The access of the above datasets can be found [here](https://www.di.ens.fr/willow/research/netvlad/).
 
@@ -54,7 +54,7 @@ examples/data
     └── └── tokyoTM_val.mat
 ```
 
-#### Pre-trained Weights
+### Pre-trained Weights
 
 ```shell
 mkdir logs && cd logs
@@ -90,7 +90,7 @@ The default scripts adopt 4 GPUs (require ~11G per GPU) for training, where each
 + In case you want to fasten training, enlarge `GPUS` for more GPUs, or enlarge the `--tuple-size` for more tuples on one GPU;
 + In case your GPU does not have enough memory (e.g. <11G), reduce `--pos-num` (only for SFRS) or `--neg-num` for fewer positives or negatives in one tuple.
 
-#### PyTorch launcher: single-node multi-gpu distributed training
+### PyTorch launcher: single-node multi-gpu distributed training
 
 **NetVLAD**
 ```shell
@@ -111,7 +111,7 @@ or
 ./scripts/train_sfrs_dist.sh
 ```
 
-#### Slurm launcher: single/multi-node multi-gpu distributed training
+### Slurm launcher: single/multi-node multi-gpu distributed training
 
 Change `GPUS` and `GPUS_PER_NODE` accordingly in the scripts for your need.
 
@@ -142,7 +142,7 @@ The default scripts adopt 8 GPUs (require ~11G per GPU) for testing.
 + In case you want to fasten testing, enlarge `GPUS` for more GPUs, or enlarge the `--test-batch-size` for larger batch size on one GPU, or add `--sync-gather` for faster gathering from multiple threads;
 + In case your GPU does not have enough memory (e.g. <11G), reduce `--test-batch-size` for smaller batch size on one GPU.
 
-#### PyTorch launcher: single-node multi-gpu distributed testing
+### PyTorch launcher: single-node multi-gpu distributed testing
 
 **Pitts250k-test**
 ```shell
@@ -159,7 +159,7 @@ The default scripts adopt 8 GPUs (require ~11G per GPU) for testing.
 ./scripts/test_dist.sh <PATH TO MODEL> tokyo
 ```
 
-#### Slurm launcher: single/multi-node multi-gpu distributed testing
+### Slurm launcher: single/multi-node multi-gpu distributed testing
 
 **Pitts250k-test**
 ```shell
