@@ -1,16 +1,16 @@
 ![Python >=3.5](https://img.shields.io/badge/Python->=3.5-blue.svg)
 ![PyTorch >=1.0](https://img.shields.io/badge/PyTorch->=1.0-yellow.svg)
 
-Unofficial implementation:
+This repo covers the implementation for SFRS (as well as NetVLAD and SARE), which learns representations for image-based localization. We support **single/multi-node multi-gpu distributed** training and testing, launched by `slurm` or `pytorch`.
+
+#### Unofficial implementation:
 + NetVLAD: CNN architecture for weakly supervised place recognition (CVPR'16) [[paper](https://arxiv.org/abs/1511.07247)] [[official code (MatConvNet)](https://github.com/Relja/netvlad)]
 + SARE: Stochastic Attraction-Repulsion Embedding for Large Scale Image Localization (ICCV'19) [[paper](https://arxiv.org/abs/1808.08779)] [[official code (MatConvNet)](https://github.com/Liumouliu/deepIBL)]
 
-Official implementation:
+#### Official implementation:
 + SFRS: Self-supervising Fine-grained Region Similarities for Large-scale Image Localization [[paper](https://arxiv.org/TODO)]
 
 ## Self-supervising Fine-grained Region Similarities
-
-This repo covers the implementation for SFRS (as well as NetVLAD and SARE), which learns representations for image-based localization. We support **single/multi-node multi-gpu distributed** training and testing, launched by `slurm` or `pytorch`.
 
 <div align=center><img width="600" height="400" src="sfrs_fm.png"/></div>
 
@@ -183,9 +183,9 @@ The default scripts adopt 8 GPUs (require ~11G per GPU) for testing.
 |   Model   |  Trained on  |   Tested on    |  Recall@1    |  Recall@5    |  Recall@10   | Download Link |
 | :--------: | :---------: | :-----------: | :----------: | :----------: | :----------: | :----------: |
 | SARE_ind | Pitts30k-train | Pitts250k-test | 88.4% | 95.0% | 96.5% | [Google Drive](https://drive.google.com/drive/folders/1ZNGdXVRwUJvGH0ZJdwy18A8e9H0wnFHc?usp=sharing) |
-| SARE_ind | Pitts30k-train | Tokyo 24/7 | 81.0% | 88.6% | 90.2% | [Google Drive](https://drive.google.com/drive/folders/1ZNGdXVRwUJvGH0ZJdwy18A8e9H0wnFHc?usp=sharing) |
+| SARE_ind | Pitts30k-train | Tokyo 24/7 | 81.0% | 88.6% | 90.2% | same as above |
 | **SFRS** | Pitts30k-train | Pitts250k-test | 90.7% | 96.4% | 97.6% | [Google Drive](https://drive.google.com/drive/folders/1FLjxFhKRO-YJQ6FI-DcCMMHDL2K_Hsof?usp=sharing) |
-| **SFRS** | Pitts30k-train | Tokyo 24/7 | 85.4% | 91.1% | 93.3% | [Google Drive](https://drive.google.com/drive/folders/1FLjxFhKRO-YJQ6FI-DcCMMHDL2K_Hsof?usp=sharing) |
+| **SFRS** | Pitts30k-train | Tokyo 24/7 | 85.4% | 91.1% | 93.3% | same as above |
 
 
 ## Citation
