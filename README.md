@@ -30,8 +30,6 @@ python setup.py install
 
 Currently, we support [Pittsburgh](https://www.cv-foundation.org/openaccess/content_cvpr_2013/papers/Torii_Visual_Place_Recognition_2013_CVPR_paper.pdf), [Tokyo 24/7](https://www.di.ens.fr/~josef/publications/Torii15.pdf) and [Tokyo Time Machine](https://arxiv.org/abs/1511.07247) datasets. The access of the above datasets can be found [here](https://www.di.ens.fr/willow/research/netvlad/).
 
-**Note:** the results of all three methods (SFRS, NetVLAD, SARE) can be reproduced by training on Pitts30k-train and directly testing on the other datasets.
-
 ```shell
 cd examples && mkdir data
 ```
@@ -86,7 +84,7 @@ Or you could compute the centers by running the script
 
 ## Train
 
-All the training details (hyper-parameters, trained layers, backbones, etc.) strictly follow the original MatConvNet version of NetVLAD and SARE.
+All the training details (hyper-parameters, trained layers, backbones, etc.) strictly follow the original MatConvNet version of NetVLAD and SARE. **Note:** the results of all three methods (SFRS, NetVLAD, SARE) can be reproduced by training on Pitts30k-train and directly testing on the other datasets.
 
 The default scripts adopt 4 GPUs (require ~11G per GPU) for training, where each GPU loads one tuple (anchor, positive(s), negatives).
 + In case you want to fasten training, enlarge `GPUS` for more GPUs, or enlarge the `--tuple-size` for more tuples on one GPU;
