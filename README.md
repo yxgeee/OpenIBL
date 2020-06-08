@@ -92,21 +92,19 @@ The default scripts adopt 4 GPUs (require ~11G per GPU) for training, where each
 
 #### PyTorch launcher: single-node multi-gpu distributed training
 
-**NetVLAD**
+NetVLAD:
 ```shell
 ./scripts/train_baseline_dist.sh triplet
 ```
 
-**SARE**
+SARE:
 ```shell
 ./scripts/train_baseline_dist.sh sare_ind
-```
-or
-```shell
+# or
 ./scripts/train_baseline_dist.sh sare_joint
 ```
 
-**Our SFRS**
+SFRS (state-of-the-art):
 ```shell
 ./scripts/train_sfrs_dist.sh
 ```
@@ -115,21 +113,19 @@ or
 
 Change `GPUS` and `GPUS_PER_NODE` accordingly in the scripts for your need.
 
-**NetVLAD**
+NetVLAD:
 ```shell
 ./scripts/train_baseline_slurm.sh <PARTITION NAME> triplet
 ```
 
-**SARE**
+SARE:
 ```shell
 ./scripts/train_baseline_slurm.sh <PARTITION NAME> sare_ind
-```
-or
-```shell
+# or
 ./scripts/train_baseline_slurm.sh <PARTITION NAME> sare_joint
 ```
 
-**Our SFRS**
+SFRS (state-of-the-art):
 ```shell
 ./scripts/train_sfrs_slurm.sh <PARTITION NAME>
 ```
@@ -144,34 +140,34 @@ The default scripts adopt 8 GPUs (require ~11G per GPU) for testing.
 
 #### PyTorch launcher: single-node multi-gpu distributed testing
 
-**Pitts250k-test**
+Pitts250k-test:
 ```shell
 ./scripts/test_dist.sh <PATH TO MODEL> pitts 250k
 ```
 
-**Pitts30k-test**
+Pitts30k-test:
 ```shell
 ./scripts/test_dist.sh <PATH TO MODEL> pitts 30k
 ```
 
-**Tokyo 24/7**
+Tokyo 24/7:
 ```shell
 ./scripts/test_dist.sh <PATH TO MODEL> tokyo
 ```
 
 #### Slurm launcher: single/multi-node multi-gpu distributed testing
 
-**Pitts250k-test**
+Pitts250k-test:
 ```shell
 ./scripts/test_slurm.sh <PARTITION NAME> <PATH TO MODEL> pitts 250k
 ```
 
-**Pitts30k-test**
+Pitts30k-test:
 ```shell
 ./scripts/test_slurm.sh <PARTITION NAME> <PATH TO MODEL> pitts 30k
 ```
 
-**Tokyo 24/7**
+Tokyo 24/7:
 ```shell
 ./scripts/test_slurm.sh <PARTITION NAME> <PATH TO MODEL> tokyo
 ```
