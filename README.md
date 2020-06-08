@@ -1,7 +1,7 @@
 ![Python >=3.5](https://img.shields.io/badge/Python->=3.5-blue.svg)
 ![PyTorch >=1.0](https://img.shields.io/badge/PyTorch->=1.0-yellow.svg)
 
-This repo covers the implementation for SFRS (as well as NetVLAD and SARE), which learns representations for image-based localization. We support **single/multi-node multi-gpu distributed** training and testing, launched by `slurm` or `pytorch`.
+This repo covers the implementation for SFRS (as well as NetVLAD and SARE), which learns representations for image-based localization. Specifically, NetVLAD first proposed a VLAD layer trained with `triplet` loss, and then SARE introduced two softmax-based losses (`sare_ind` and `sare_joint`) to boost the training. Our SFRS is trained in generations with self-enhanced soft-label losses to achieve state-of-the-art performance. We support **single/multi-node multi-gpu distributed** training and testing, launched by `slurm` or `pytorch`.
 
 #### Unofficial implementation:
 + NetVLAD: CNN architecture for weakly supervised place recognition (CVPR'16) [[paper](https://arxiv.org/abs/1511.07247)] [[official code (MatConvNet)](https://github.com/Relja/netvlad)]
