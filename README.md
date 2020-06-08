@@ -190,3 +190,7 @@ If you find this repo useful for your research, please consider citing the paper
 ```
 TODO
 ```
+
+## Acknowledgements
+
+The structure of this repo is inspired by [open-reid](https://github.com/Cysu/open-reid), and part of the code is inspired by [pytorch-NetVlad](https://github.com/Nanne/pytorch-NetVlad).
