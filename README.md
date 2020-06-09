@@ -8,7 +8,7 @@ This repo covers the implementation for SFRS (as well as NetVLAD and SARE), whic
 + SARE: Stochastic Attraction-Repulsion Embedding for Large Scale Image Localization (ICCV'19) [[paper](https://arxiv.org/abs/1808.08779)] [[official code (MatConvNet)](https://github.com/Liumouliu/deepIBL)]
 
 #### Official implementation:
-+ SFRS: Self-supervising Fine-grained Region Similarities for Large-scale Image Localization [[paper](https://arxiv.org/TODO)]
++ SFRS: Self-supervising Fine-grained Region Similarities for Large-scale Image Localization [[paper](https://arxiv.org/abs/2006.03926)]
 
 ## Self-supervising Fine-grained Region Similarities
 
@@ -188,7 +188,14 @@ Tokyo 24/7:
 
 If you find this repo useful for your research, please consider citing the paper
 ```
-TODO
+@misc{ge2020selfsupervising,
+    title={Self-supervising Fine-grained Region Similarities for Large-scale Image Localization},
+    author={Yixiao Ge and Haibo Wang and Feng Zhu and Rui Zhao and Hongsheng Li},
+    year={2020},
+    eprint={2006.03926},
+    archivePrefix={arXiv},
+    primaryClass={cs.CV}
+}
 ```
 
 ## Acknowledgements
