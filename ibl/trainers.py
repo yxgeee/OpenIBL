@@ -95,58 +95,64 @@ class Trainer(object):
                                             margin=self.margin, p=2, reduction='mean')
 
         elif (loss_type=='sare_joint'):
-            ### compute distance by dot product
+            ### original version: euclidean distance
+            # dist_pos = ((output_anchors - output_positives)**2).sum(1)
+            # dist_pos = dist_pos.view(B, 1)
+            #
+            # output_anchors = output_anchors.unsqueeze(1).expand_as(output_negatives).contiguous().view(-1, L)
+            # output_negatives = output_negatives.contiguous().view(-1, L)
+            # dist_neg = ((output_anchors - output_negatives)**2).sum(1)
+            # dist_neg = dist_neg.view(B, -1)
+            #
+            # dist = - torch.cat((dist_pos, dist_neg), 1)
+            # dist = F.log_softmax(dist, 1)
+            # loss = (- dist[:, 0]).mean()
+
+            ### new version: dot product
             dist_pos = torch.mm(output_anchors, output_positives.transpose(0,1)) # B*B
             dist_pos = dist_pos.diagonal(0)
             dist_pos = dist_pos.view(B, 1)
 
-            ### compute distance by l2 distance (in original paper)
-            # dist_pos = ((output_anchors - output_positives)**2).sum(1)
-            # dist_pos = dist_pos.view(B, 1)
-
             output_anchors = output_anchors.unsqueeze(1).expand_as(output_negatives).contiguous().view(-1, L)
             output_negatives = output_negatives.contiguous().view(-1, L)
-
-            ### compute distance by dot product
             dist_neg = torch.mm(output_anchors, output_negatives.transpose(0,1)) # B*B
             dist_neg = dist_neg.diagonal(0)
             dist_neg = dist_neg.view(B, -1)
 
-            ### compute distance by l2 distance (in original paper)
-            # dist_neg = ((output_anchors - output_negatives)**2).sum(1)
-            # dist_neg = dist_neg.view(B, -1)
-
-            # joint optimize
             dist = torch.cat((dist_pos, dist_neg), 1)/self.temp
             dist = F.log_softmax(dist, 1)
             loss = (- dist[:, 0]).mean()
 
         elif (loss_type=='sare_ind'):
-            ### compute distance by dot product
+            ### original version: euclidean distance
+            # dist_pos = ((output_anchors - output_positives)**2).sum(1)
+            # dist_pos = dist_pos.view(B, 1)
+            #
+            # output_anchors = output_anchors.unsqueeze(1).expand_as(output_negatives).contiguous().view(-1, L)
+            # output_negatives = output_negatives.contiguous().view(-1, L)
+            # dist_neg = ((output_anchors - output_negatives)**2).sum(1)
+            # dist_neg = dist_neg.view(B, -1)
+            #
+            # dist_neg = dist_neg.unsqueeze(2)
+            # dist_pos = dist_pos.view(B, 1, 1).expand_as(dist_neg)
+            # dist = - torch.cat((dist_pos, dist_neg), 2).view(-1, 2)
+            # dist = F.log_softmax(dist, 1)
+            # loss = (- dist[:, 0]).mean()
+
+            ### new version: dot product
             dist_pos = torch.mm(output_anchors, output_positives.transpose(0,1)) # B*B
             dist_pos = dist_pos.diagonal(0)
             dist_pos = dist_pos.view(B, 1)
 
-            ### compute distance by l2 distance (in original paper)
-            # dist_pos = ((output_anchors - output_positives)**2).sum(1)
-            # dist_pos = dist_pos.view(B, 1)
-
             output_anchors = output_anchors.unsqueeze(1).expand_as(output_negatives).contiguous().view(-1, L)
             output_negatives = output_negatives.contiguous().view(-1, L)
-
-            ### compute distance by dot product
             dist_neg = torch.mm(output_anchors, output_negatives.transpose(0,1)) # B*B
             dist_neg = dist_neg.diagonal(0)
             dist_neg = dist_neg.view(B, -1)
 
-            ### compute distance by l2 distance (in original paper)
-            # dist_neg = ((output_anchors - output_negatives)**2).sum(1)
-            # dist_neg = dist_neg.view(B, -1)
-
-            # indivial optimize
             dist_neg = dist_neg.unsqueeze(2)
+            dist_pos = dist_pos.view(B, 1, 1).expand_as(dist_neg)
             dist = torch.cat((dist_pos, dist_neg), 2).view(-1, 2)/self.temp
-            dist = torch.cat((dist_pos, dist_neg), 2).view(-1, 2)
             dist = F.log_softmax(dist, 1)
             loss = (- dist[:, 0]).mean()
 
