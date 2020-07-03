@@ -14,7 +14,9 @@ This repo covers the implementation for SFRS (as well as NetVLAD and SARE), whic
 
 NetVLAD first proposed a VLAD layer trained with `triplet` loss, and then SARE introduced two softmax-based losses (`sare_ind` and `sare_joint`) to boost the training. Our SFRS is trained in generations with self-enhanced soft-label losses to achieve state-of-the-art performance.
 
-<img src="sfrs_fm.png" align="center" width="60%">
+<p align="center">
+    <img src="sfrs_fm.png" width="60%">
+</p>
 
 ## Installation
 
