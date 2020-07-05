@@ -10,6 +10,9 @@ This repo covers the implementation for SFRS (as well as NetVLAD and SARE), whic
 + NetVLAD: CNN architecture for weakly supervised place recognition (CVPR'16) [[paper](https://arxiv.org/abs/1511.07247)] [[official code (MatConvNet)](https://github.com/Relja/netvlad)]
 + SARE: Stochastic Attraction-Repulsion Embedding for Large Scale Image Localization (ICCV'19) [[paper](https://arxiv.org/abs/1808.08779)] [[official code (MatConvNet)](https://github.com/Liumouliu/deepIBL)]
 
+#### News
++ [2020-07-03] Our SFRS paper has been accepted in ECCV'20 as a **spotlight** presentation!
+
 ## Self-supervising Fine-grained Region Similarities
 
 NetVLAD first proposed a VLAD layer trained with `triplet` loss, and then SARE introduced two softmax-based losses (`sare_ind` and `sare_joint`) to boost the training. Our SFRS is trained in generations with self-enhanced soft-label losses to achieve state-of-the-art performance.
@@ -22,9 +25,8 @@ NetVLAD first proposed a VLAD layer trained with `triplet` loss, and then SARE i
 
 This repo was tested with Python 3.6, PyTorch 1.1.0, and CUDA 9.0. But it should be runnable with recent PyTorch versions >=1.0.0. (0.4.x may be also ok)
 ```shell
-python setup.py install
+python setup.py develop
 ```
-**Note:** run the above setup command once changing the files in `ibl/` dictionary.
 
 ## Preparation
 
