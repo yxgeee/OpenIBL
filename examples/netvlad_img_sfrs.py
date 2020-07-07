@@ -109,26 +109,30 @@ def get_model(args):
     if (args.syncbn):
         convert_sync_bn(model)
     model.cuda(args.gpu)
-    model = nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu], output_device=args.gpu, find_unused_parameters=True)
+    model = nn.parallel.DistributedDataParallel(
+                model, device_ids=[args.gpu], output_device=args.gpu, find_unused_parameters=True
+            )
     return model
 
 def main():
     args = parser.parse_args()
-
-    if args.seed is not None:
-        random.seed(args.seed)
-        np.random.seed(args.seed)
-        torch.manual_seed(args.seed)
-        torch.cuda.manual_seed(args.seed)
-        cudnn.deterministic = True
-
     main_worker(args)
 
 def main_worker(args):
     global start_epoch, start_gen, best_recall5
     init_dist(args.launcher, args)
     synchronize()
-    cudnn.benchmark = True
+
+    if args.seed is not None:
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+        torch.manual_seed(args.seed)
+        torch.cuda.manual_seed(args.seed)
+
+    if args.deterministic:
+        cudnn.deterministic = True
+        cudnn.benchmark = False
+
     print("Use GPU: {} for training, rank no.{} of world_size {}"
           .format(args.gpu, args.rank, args.world_size))
 
@@ -186,7 +190,6 @@ def main_worker(args):
         for epoch in range(start_epoch, args.epochs):
 
             sampler.set_epoch(args.seed+epoch)
-            lr_scheduler.step()
             if (epoch%args.step_size==0):
                 args.cache_size = args.cache_size * (2 ** (epoch // args.step_size))
 
@@ -222,7 +225,8 @@ def main_worker(args):
                     print('\n * Finished generation {:3d} epoch {:3d} recall@1: {:5.1%}  recall@5: {:5.1%}  recall@10: {:5.1%}  best@5: {:5.1%}{}\n'.
                           format(gen, epoch, recalls[0], recalls[1], recalls[2], best_recall5, ' *' if is_best else ''))
 
-                synchronize()
+            lr_scheduler.step()
+            synchronize()
 
         start_epoch = 0
 
@@ -299,6 +303,7 @@ if __name__ == '__main__':
     parser.add_argument('--soft-weight', type=float, default=0.5)
     parser.add_argument('--iters', type=int, default=0)
     parser.add_argument('--seed', type=int, default=43)
+    parser.add_argument('--deterministic', action='store_true')
     parser.add_argument('--print-freq', type=int, default=10)
     parser.add_argument('--margin', type=float, default=0.1, help='margin for the triplet loss with batch hard')
     # path

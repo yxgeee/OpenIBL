@@ -41,7 +41,7 @@ def extract_features(model, data_loader, dataset, print_freq=10,
     features = []
 
     if (pca is not None):
-        pca.load()
+        pca.load(gpu=gpu)
 
     end = time.time()
     with torch.no_grad():

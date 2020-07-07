@@ -64,18 +64,13 @@ def get_model(args):
         model = base_model
 
     model.cuda(args.gpu)
-    model = nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu], output_device=args.gpu, find_unused_parameters=True)
+    model = nn.parallel.DistributedDataParallel(
+                model, device_ids=[args.gpu], output_device=args.gpu, find_unused_parameters=True
+            )
     return model
 
 def main():
     args = parser.parse_args()
-
-    if args.seed is not None:
-        random.seed(args.seed)
-        np.random.seed(args.seed)
-        torch.manual_seed(args.seed)
-        torch.cuda.manual_seed(args.seed)
-        cudnn.deterministic = True
 
     main_worker(args)
 
@@ -166,7 +161,6 @@ if __name__ == '__main__':
                         help="evaluation only")
     parser.add_argument('--rerank', action='store_true',
                         help="evaluation only")
-    parser.add_argument('--seed', type=int, default=43)
     parser.add_argument('--rr-topk', type=int, default=25)
     parser.add_argument('--lambda-value', type=float, default=0)
     parser.add_argument('--print-freq', type=int, default=10)

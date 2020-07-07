@@ -83,7 +83,7 @@ class PCA():
         h5file.create_dataset('Utmu', data=Utmu)
         h5file.close()
 
-    def load(self):
+    def load(self, gpu=None):
         try:
             rank = dist.get_rank()
         except:
@@ -102,10 +102,10 @@ class PCA():
             U = np.matmul(U, np.diag(1./np.sqrt(lams)))
         Utmu = np.matmul(U.T, mu)
 
-        self.weight = torch.from_numpy(U.T).view(self.pca_n_components, -1, 1, 1).float()
-        self.bias = torch.from_numpy(-Utmu).view(-1).float()
+        self.weight = torch.from_numpy(U.T).view(self.pca_n_components, -1, 1, 1).float().cuda(gpu)
+        self.bias = torch.from_numpy(-Utmu).view(-1).float().cuda(gpu)
 
-    def infer(self, data, gpu=None):
+    def infer(self, data):
         '''apply PCA/Whitening to data.
         Args:
             data: [N, dim] FloatTensor containing data which undergoes PCA/Whitening.
@@ -116,7 +116,7 @@ class PCA():
         ### Referring to https://github.com/Relja/netvlad/blob/master/addPCA.m
         N, D = data.size()
         data = data.view(N, D, 1, 1)
-        output = F.conv2d(data, self.weight.cuda(gpu), bias=self.bias.cuda(gpu), stride=1, padding=0).view(N, -1)
+        output = F.conv2d(data, self.weight, bias=self.bias, stride=1, padding=0).view(N, -1)
 
         output = F.normalize(output, p=2, dim=-1) # IMPORTANT!
         assert (output.size(1)==self.pca_n_components)
