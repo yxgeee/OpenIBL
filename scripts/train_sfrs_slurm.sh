@@ -7,7 +7,7 @@ DATASET=pitts
 SCALE=30k
 ARCH=vgg16
 LAYERS=conv5
-LOSS=sare_joint
+LOSS=sare_ind
 LR=0.001
 
 if [ $# -ne 1 ]
