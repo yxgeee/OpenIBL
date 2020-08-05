@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 
-setup(name='SFRS',
+setup(name='OpenIBL',
       version='0.1.0',
-      description='Deep Learning Library for Image-based Localization',
+      description='Open-source toolbox for Image-based Localization (Place Recognition)',
       author_email='geyixiao831@gmail.com',
-      url='https://github.com/yxgeee/SFRS',
+      url='https://github.com/yxgeee/OpenIBL',
       license='MIT',
       install_requires=[
           'numpy', 'torch', 'torchvision',
@@ -14,6 +14,6 @@ setup(name='SFRS',
       packages=find_packages(),
       keywords=[
           'Image Localization',
-          'Computer Vision',
-          'Deep Learning'
+          'Image Retrieval',
+          'Place Recognition'
       ])
