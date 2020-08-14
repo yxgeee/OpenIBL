@@ -37,9 +37,9 @@ class Tokyo(Dataset):
         raw_dir = osp.join(self.root, 'raw')
         if (not osp.isdir(raw_dir)):
             raise RuntimeError("Dataset not found.")
-        TM_root = osp.join('TokyoTM', 'images')
-        db_root = osp.join('Tokyo247', 'images')
-        q_root = osp.join('Tokyo247', 'query')
+        TM_root = osp.join('tokyoTM', 'images')
+        db_root = osp.join('tokyo247', 'images')
+        q_root = osp.join('tokyo247', 'query')
 
         identities = []
         utms = []
@@ -115,6 +115,7 @@ class Tokyo(Dataset):
             db_ids = []
             for fpath, utm in zip(struct.dbImage, struct.utmDb):
                 sid = osp.dirname(fpath)
+                fpath = fpath[:-3]+'png'
                 # sid = str(utm[0])+'_'+str(utm[1])
                 # sid = fpath[:-12]
                 if (sid not in db_pids.keys()):
