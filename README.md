@@ -12,7 +12,7 @@
 `OpenIBL` is an open-source PyTorch-based codebase for image-based localization, or in other words, place recognition. It supports multiple state-of-the-art methods, and also covers the official implementation for our ECCV-2020 spotlight paper **SFRS**. We support **single/multi-node multi-gpu distributed** training and testing, launched by `slurm` or `pytorch`.
 
 #### Official implementation:
-+ SFRS: Self-supervising Fine-grained Region Similarities for Large-scale Image Localization (ECCV'20 **Spotlight**) [[paper]](https://arxiv.org/abs/2006.03926)
++ SFRS: Self-supervising Fine-grained Region Similarities for Large-scale Image Localization (ECCV'20 **Spotlight**) [[paper]](https://arxiv.org/abs/2006.03926) [[Blog(Chinese)]](https://zhuanlan.zhihu.com/p/169596514)
 
 #### Unofficial implementation:
 + NetVLAD: CNN architecture for weakly supervised place recognition (CVPR'16) [[paper]](https://arxiv.org/abs/1511.07247) [[official code (MatConvNet)]](https://github.com/Relja/netvlad)
