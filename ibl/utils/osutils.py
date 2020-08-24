@@ -4,6 +4,7 @@ import errno
 
 
 def mkdir_if_missing(dir_path):
+    if not dir_path: return
     try:
         os.makedirs(dir_path)
     except OSError as e:

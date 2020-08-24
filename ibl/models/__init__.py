@@ -8,6 +8,7 @@ __factory = {
     'vgg16': vgg16,
     'netvlad': NetVLAD,
     'embednet': EmbedNet,
+    'embednetpca': EmbedNetPCA,
     'embedregionnet': EmbedRegionNet,
 }
 

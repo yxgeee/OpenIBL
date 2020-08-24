@@ -22,11 +22,15 @@ from .utils import to_torch
 def extract_cnn_feature(model, inputs, vlad=True, gpu=None):
     model.eval()
     inputs = to_torch(inputs).cuda(gpu)
-    x_pool, x_vlad = model(inputs)
-    if vlad:
-        outputs = F.normalize(x_vlad, p=2, dim=-1)
+    outputs = model(inputs)
+    if (isinstance(outputs, list) or isinstance(outputs, tuple)):
+        x_pool, x_vlad = outputs
+        if vlad:
+            outputs = F.normalize(x_vlad, p=2, dim=-1)
+        else:
+            outputs = F.normalize(x_pool, p=2, dim=-1)
     else:
-        outputs = F.normalize(x_pool, p=2, dim=-1)
+        outputs = F.normalize(outputs, p=2, dim=-1)
     return outputs
 
 def extract_features(model, data_loader, dataset, print_freq=10,

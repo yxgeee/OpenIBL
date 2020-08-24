@@ -81,6 +81,34 @@ class EmbedNet(nn.Module):
 
         return pool_x, vlad_x
 
+class EmbedNetPCA(nn.Module):
+    def __init__(self, base_model, net_vlad, dim=4096):
+        super(EmbedNetPCA, self).__init__()
+        self.base_model = base_model
+        self.net_vlad = net_vlad
+        self.pca_layer = nn.Conv2d(net_vlad.num_clusters*net_vlad.dim, dim, 1, stride=1, padding=0)
+
+    def _init_params(self):
+        self.base_model._init_params()
+        self.net_vlad._init_params()
+
+    def forward(self, x):
+        _, x = self.base_model(x)
+        vlad_x = self.net_vlad(x)
+
+        # [IMPORTANT] normalize
+        vlad_x = F.normalize(vlad_x, p=2, dim=2)  # intra-normalization
+        vlad_x = vlad_x.view(x.size(0), -1)  # flatten
+        vlad_x = F.normalize(vlad_x, p=2, dim=1)  # L2 normalize
+
+        # reduction
+        N, D = vlad_x.size()
+        vlad_x = vlad_x.view(N, D, 1, 1)
+        vlad_x = self.pca_layer(vlad_x).view(N, -1)
+        vlad_x = F.normalize(vlad_x, p=2, dim=-1)  # L2 normalize
+
+        return vlad_x
+
 class EmbedRegionNet(nn.Module):
     def __init__(self, base_model, net_vlad, tuple_size=1):
         super(EmbedRegionNet, self).__init__()
