@@ -20,24 +20,21 @@
 
 ## Quick Start
 
-### Download
-```shell
-git clone https://github.com/yxgeee/OpenIBL.git
-cd OpenIBL/
-```
-
 ### Extract descriptor for a single image
 ```shell
 import torch
 from PIL import Image
-from ibl.utils.data import get_transformer_test
+import torchvision.transforms as T
 
 # load the best model with PCA (trained by our SFRS)
 model = torch.hub.load('yxgeee/OpenIBL', 'vgg16_netvlad', pretrained=True).eval()
 
 # read image
 img = Image.open('image.jpg').convert('RGB') # modify the image path according to your need
-transformer = get_transformer_test(480, 640) # (height, width)
+transformer = T.Compose([T.Resize(480, 640), # (height, width)
+                         T.ToTensor(),
+                         T.Normalize(mean=[0.48501960784313836, 0.4579568627450961, 0.4076039215686255],
+                                     std=[0.00392156862745098, 0.00392156862745098, 0.00392156862745098])])
 img = transformer(img)
 
 # use GPU (optional)
