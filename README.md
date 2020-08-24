@@ -20,6 +20,12 @@
 
 ## Quick Start
 
+### Download
+```shell
+git clone https://github.com/yxgeee/OpenIBL.git
+cd OpenIBL/
+```
+
 ### Extract descriptor for a single image
 ```shell
 import torch
