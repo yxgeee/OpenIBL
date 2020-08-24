@@ -23,18 +23,18 @@
 ### Extract descriptor for a single image
 ```shell
 import torch
+from torchvision import transforms
 from PIL import Image
-import torchvision.transforms as T
 
 # load the best model with PCA (trained by our SFRS)
 model = torch.hub.load('yxgeee/OpenIBL', 'vgg16_netvlad', pretrained=True).eval()
 
 # read image
 img = Image.open('image.jpg').convert('RGB') # modify the image path according to your need
-transformer = T.Compose([T.Resize(480, 640), # (height, width)
-                         T.ToTensor(),
-                         T.Normalize(mean=[0.48501960784313836, 0.4579568627450961, 0.4076039215686255],
-                                     std=[0.00392156862745098, 0.00392156862745098, 0.00392156862745098])])
+transformer = transforms.Compose([transforms.Resize(480, 640), # (height, width)
+                                  transforms.ToTensor(),
+                                  transforms.Normalize(mean=[0.48501960784313836, 0.4579568627450961, 0.4076039215686255],
+                                                       std=[0.00392156862745098, 0.00392156862745098, 0.00392156862745098])])
 img = transformer(img)
 
 # use GPU (optional)
