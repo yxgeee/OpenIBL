@@ -18,7 +18,7 @@
 + NetVLAD: CNN architecture for weakly supervised place recognition (CVPR'16) [[paper]](https://arxiv.org/abs/1511.07247) [[official code (MatConvNet)]](https://github.com/Relja/netvlad)
 + SARE: Stochastic Attraction-Repulsion Embedding for Large Scale Image Localization (ICCV'19) [[paper]](https://arxiv.org/abs/1808.08779) [[official code (MatConvNet)]](https://github.com/Liumouliu/deepIBL)
 
-## Quick Start Without Installation
+## Quick Start without Installation
 
 ### Extract descriptor for a single image
 ```shell
