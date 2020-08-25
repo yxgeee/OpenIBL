@@ -31,7 +31,7 @@ model = torch.hub.load('yxgeee/OpenIBL', 'vgg16_netvlad', pretrained=True).eval(
 
 # read image
 img = Image.open('image.jpg').convert('RGB') # modify the image path according to your need
-transformer = transforms.Compose([transforms.Resize(480, 640), # (height, width)
+transformer = transforms.Compose([transforms.Resize((480, 640)), # (height, width)
                                   transforms.ToTensor(),
                                   transforms.Normalize(mean=[0.48501960784313836, 0.4579568627450961, 0.4076039215686255],
                                                        std=[0.00392156862745098, 0.00392156862745098, 0.00392156862745098])])
