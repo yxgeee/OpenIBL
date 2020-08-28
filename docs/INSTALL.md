@@ -49,13 +49,13 @@ logs
 
 **(1) imageNet-pretrained weights for VGG16 backbone from MatConvNet**
 
-The official repos of NetVLAD and SARE are based on MatConvNet. To reproduce their results, we need to load the same pretrained weights. Directly download from [Google Drive](https://drive.google.com/file/d/1kYIbFjbb0RuNuD0cRIlKmOteFVI1jRzR/view?usp=sharing) and save it under the path of `logs/`.
+The official repos of NetVLAD and SARE are based on MatConvNet. To reproduce their results, we need to load the same pretrained weights. Directly download from [Google Drive](https://drive.google.com/file/d/1G5I48fVGOrOk8hPaNGni6q7fRcD_37gI/view?usp=sharing) and save it under the path of `logs/`.
 
 **(2) initial cluster centers for VLAD layer**
 
 **Note:** it is important as the VLAD layer cannot work with random initialization.
 
-The original cluster centers provided by NetVLAD are highly **recommended**. You could directly download from [Google Drive](https://drive.google.com/file/d/1G5I48fVGOrOk8hPaNGni6q7fRcD_37gI/view?usp=sharing) and save it under the path of `logs/`.
+The original cluster centers provided by NetVLAD are highly **recommended**. You could directly download from [Google Drive](https://drive.google.com/file/d/1kYIbFjbb0RuNuD0cRIlKmOteFVI1jRzR/view?usp=sharing) and save it under the path of `logs/`.
 
 Or you could compute the centers by running the script
 ```shell
