@@ -49,7 +49,7 @@ transformer = transforms.Compose([transforms.Resize((480, 640)), # (height, widt
 img = transformer(img)
 
 # use GPU (optional)
-mdoel = model.cuda()
+model = model.cuda()
 img = img.cuda()
 
 # extract descriptor (4096-dim)
