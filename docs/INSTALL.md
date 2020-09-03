@@ -35,6 +35,33 @@ examples/data
     └── └── tokyoTM_val.mat
 ```
 
+### Use Custom Dataset (Optional)
+
+1. Download your own dataset and save it under
+```shell
+examples/data/my_dataset
+  └── raw/ # save the images here
+```
+
+2. Define your own dataset following the [template](../ibl/datasets/demo.py), and save it under `ibl/datasets/`, e.g. `ibl/datasets/my_dataset.py`.
+
+3. Register it in [ibl/datasets/__init__.py](../ibl/datasets/__init__.py), e.g.
+```shell
+from .my_dataset import MyDataset # MyDataset is the class name
+__factory = {
+    'my_dataset': MyDataset,
+}
+```
+
+4. (Optional) Read it by
+```shell
+from ibl.datasets import create
+dataset = create('my_dataset', 'examples/data/my_dataset') # you can use this command for debugging
+```
+
+5. Use it for training/testing by adding args of `-d my_dataset` in the scripts.
+
+
 ### Pre-trained Weights
 
 ```shell
