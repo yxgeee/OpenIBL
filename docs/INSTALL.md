@@ -45,7 +45,7 @@ examples/data/my_dataset
 
 2. Define your own dataset following the [template](../ibl/datasets/demo.py), and save it under `ibl/datasets/`, e.g. `ibl/datasets/my_dataset.py`.
 
-3. Register it in [ibl/datasets/__init__.py](../ibl/datasets/\_\_init\_\_.py), e.g.
+3. Register it in [ibl/datasets/\_\_init\_\_.py](../ibl/datasets/__init__.py), e.g.
 ```shell
 from .my_dataset import MyDataset # MyDataset is the class name
 __factory = {
