@@ -4,10 +4,13 @@ import warnings
 from .pitts import Pittsburgh
 from .tokyo import Tokyo
 
+from .demo import Demo
+
 
 __factory = {
     'pitts': Pittsburgh,
-    'tokyo': Tokyo
+    'tokyo': Tokyo,
+    'demo': Demo,
 }
 
 
