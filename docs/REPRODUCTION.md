@@ -48,6 +48,8 @@ SFRS (state-of-the-art):
 
 ## Test
 
+Trained models can be found in [MODEL_ZOO.md](MODEL_ZOO.md).
+
 During testing, the python scripts will automatically compute the PCA weights from Pitts30k-train or directly load from local files. Generally, `model_best.pth.tar` which is selected by validation in the training performs the best.
 
 The default scripts adopt 8 GPUs (require ~11G per GPU) for testing.
