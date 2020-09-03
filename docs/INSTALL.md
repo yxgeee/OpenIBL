@@ -43,7 +43,7 @@ examples/data/my_dataset
   └── raw/ # save the images here
 ```
 
-2. Define your own dataset following the [template](../ibl/datasets/demo.py), and save it under `ibl/datasets/`, e.g. `ibl/datasets/my_dataset.py`.
+2. Define your own dataset following the [template](../ibl/datasets/demo.py), and save it under [ibl/datasets/](../ibl/datasets/), e.g. `ibl/datasets/my_dataset.py`.
 
 3. Register it in [ibl/datasets/\_\_init\_\_.py](../ibl/datasets/__init__.py), e.g.
 ```shell
