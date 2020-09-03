@@ -18,6 +18,12 @@
 + NetVLAD: CNN architecture for weakly supervised place recognition (CVPR'16) [[paper]](https://arxiv.org/abs/1511.07247) [[official code (MatConvNet)]](https://github.com/Relja/netvlad)
 + SARE: Stochastic Attraction-Repulsion Embedding for Large Scale Image Localization (ICCV'19) [[paper]](https://arxiv.org/abs/1808.08779) [[official code (MatConvNet)]](https://github.com/Liumouliu/deepIBL)
 
+#### FAQ
++ How to extract descriptor for a single image?
+**A:** Please refer to [[Quick Start]](#extract-descriptor-for-a-single-image).
++ How to add my custom dataset for training and testing?
+**A:** Please refer to [[INSTALL.md/Use Custom Dataset (Optional)]](docs/INSTALL.md#use-custom-dataset-optional).
+
 ## Quick Start without Installation
 
 ### Extract descriptor for a single image
@@ -59,16 +65,6 @@ To reproduce the results in papers, you could train and test the models followin
 
 Please refer to [MODEL_ZOO.md](docs/MODEL_ZOO.md) for trained models.
 
-## FAQ
-
-**Q:** How to extract descriptor for a single image?
-
-**A:** Please refer to [[Quick Start]](#extract-descriptor-for-a-single-image).
-
-
-**Q:** How to add my custom dataset for training and testing?
-
-**A:** Please refer to [[INSTALL.md/Use Custom Dataset (Optional)]](docs/INSTALL.md#use-custom-dataset-optional).
 
 ## License
 
