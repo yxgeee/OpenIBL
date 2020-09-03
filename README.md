@@ -20,9 +20,17 @@
 
 #### FAQ
 + How to extract descriptor for a single image?
-**A:** Please refer to [[Quick Start]](#extract-descriptor-for-a-single-image).
+
+**A:** Please refer to [Quick Start](#extract-descriptor-for-a-single-image).
+
++ How to reproduce the results in the paper?
+
+**A:** Please first refer to [INSTALL.md](docs/INSTALL.md) for installation and dataset preparation, and then you can directly test our trained models (downloaded from [MODEL_ZOO.md](docs/MODEL_ZOO.md)) referring to [REPRODUCTION.md/Test](docs/REPRODUCTION.md#test), or you can train your own models referring to [REPRODUCTION.md/Train](docs/REPRODUCTION.md#train).
+
 + How to add my custom dataset for training and testing?
-**A:** Please refer to [[INSTALL.md/Use Custom Dataset (Optional)]](docs/INSTALL.md#use-custom-dataset-optional).
+
+**A:** Please refer to [INSTALL.md/Use Custom Dataset (Optional)](docs/INSTALL.md#use-custom-dataset-optional).
+
 
 ## Quick Start without Installation
 
