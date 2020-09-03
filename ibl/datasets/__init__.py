@@ -25,17 +25,9 @@ def create(name, root, *args, **kwargs):
     Parameters
     ----------
     name : str
-        The dataset name. Can be one of 'viper', 'cuhk01', 'cuhk03',
-        'market1501', and 'dukemtmc'.
+        The dataset name. Can be one of 'pitts', 'tokyo'.
     root : str
         The path to the dataset directory.
-    split_id : int, optional
-        The index of data split. Default: 0
-    num_val : int or float, optional
-        When int, it means the number of validation identities. When float,
-        it means the proportion of validation to all the trainval. Default: 100
-    download : bool, optional
-        If True, will download the dataset. Default: False
     """
     if name not in __factory:
         raise KeyError("Unknown dataset:", name)
