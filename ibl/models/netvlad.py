@@ -32,6 +32,12 @@ class NetVLAD(nn.Module):
         self.traindescs = None
 
     def _init_params(self):
+        """
+        Initialize the parameters.
+
+        Args:
+            self: (todo): write your description
+        """
         clstsAssign = self.clsts / np.linalg.norm(self.clsts, axis=1, keepdims=True)
         dots = np.dot(clstsAssign, self.traindescs.T)
         dots.sort(0)
@@ -42,6 +48,13 @@ class NetVLAD(nn.Module):
         self.conv.weight.data.copy_(torch.from_numpy(self.alpha*clstsAssign).unsqueeze(2).unsqueeze(3))
 
     def forward(self, x):
+        """
+        Forward computation. forward.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         N, C = x.shape[:2]
         if self.normalize_input:
             x = F.normalize(x, p=2, dim=1)  # across descriptor dim
@@ -62,15 +75,36 @@ class NetVLAD(nn.Module):
 
 class EmbedNet(nn.Module):
     def __init__(self, base_model, net_vlad):
+        """
+        Initialize network.
+
+        Args:
+            self: (todo): write your description
+            base_model: (str): write your description
+            net_vlad: (todo): write your description
+        """
         super(EmbedNet, self).__init__()
         self.base_model = base_model
         self.net_vlad = net_vlad
 
     def _init_params(self):
+        """
+        Initialize parameters.
+
+        Args:
+            self: (todo): write your description
+        """
         self.base_model._init_params()
         self.net_vlad._init_params()
 
     def forward(self, x):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         pool_x, x = self.base_model(x)
         vlad_x = self.net_vlad(x)
 
@@ -83,16 +117,38 @@ class EmbedNet(nn.Module):
 
 class EmbedNetPCA(nn.Module):
     def __init__(self, base_model, net_vlad, dim=4096):
+        """
+        Initialize network.
+
+        Args:
+            self: (todo): write your description
+            base_model: (str): write your description
+            net_vlad: (todo): write your description
+            dim: (int): write your description
+        """
         super(EmbedNetPCA, self).__init__()
         self.base_model = base_model
         self.net_vlad = net_vlad
         self.pca_layer = nn.Conv2d(net_vlad.num_clusters*net_vlad.dim, dim, 1, stride=1, padding=0)
 
     def _init_params(self):
+        """
+        Initialize parameters.
+
+        Args:
+            self: (todo): write your description
+        """
         self.base_model._init_params()
         self.net_vlad._init_params()
 
     def forward(self, x):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         _, x = self.base_model(x)
         vlad_x = self.net_vlad(x)
 
@@ -111,20 +167,49 @@ class EmbedNetPCA(nn.Module):
 
 class EmbedRegionNet(nn.Module):
     def __init__(self, base_model, net_vlad, tuple_size=1):
+        """
+        Initialize network.
+
+        Args:
+            self: (todo): write your description
+            base_model: (str): write your description
+            net_vlad: (todo): write your description
+            tuple_size: (int): write your description
+        """
         super(EmbedRegionNet, self).__init__()
         self.base_model = base_model
         self.net_vlad = net_vlad
         self.tuple_size = tuple_size
 
     def _init_params(self):
+        """
+        Initialize parameters.
+
+        Args:
+            self: (todo): write your description
+        """
         self.base_model._init_params()
         self.net_vlad._init_params()
 
     def _compute_region_sim(self, feature_A, feature_B):
+        """
+        Compute the region of a feature.
+
+        Args:
+            self: (todo): write your description
+            feature_A: (str): write your description
+            feature_B: (str): write your description
+        """
         # feature_A: B*C*H*W
         # feature_B: (B*(1+neg_num))*C*H*W
 
         def reshape(x):
+            """
+            Reshape a 1d array
+
+            Args:
+                x: (todo): write your description
+            """
             # re-arrange local features for aggregating quarter regions
             N, C, H, W = x.size()
             x = x.view(N, C, 2, int(H/2), 2, int(W/2))
@@ -137,6 +222,12 @@ class EmbedRegionNet(nn.Module):
 
         # computer quarter-region features
         def aggregate_quarter(x):
+            """
+            Aggregate ants of a network.
+
+            Args:
+                x: (todo): write your description
+            """
             N, C, B, H, W = x.size()
             x = x.permute(0,2,1,3,4).contiguous()
             x = x.view(-1,C,H,W)
@@ -150,6 +241,12 @@ class EmbedRegionNet(nn.Module):
 
         # computer half-region features
         def quarter_to_half(vlad_x):
+            """
+            Convert a tuple of vertices to a tuple.
+
+            Args:
+                vlad_x: (todo): write your description
+            """
             return torch.stack((vlad_x[:,0]+vlad_x[:,1], vlad_x[:,2]+vlad_x[:,3], \
                                 vlad_x[:,0]+vlad_x[:,2], vlad_x[:,1]+vlad_x[:,3]), dim=1).contiguous()
 
@@ -158,12 +255,24 @@ class EmbedRegionNet(nn.Module):
 
         # computer global-image features
         def quarter_to_global(vlad_x):
+            """
+            Converts the global variable to the latent variable.
+
+            Args:
+                vlad_x: (todo): write your description
+            """
             return vlad_x.sum(1).unsqueeze(1).contiguous()
 
         vlad_A_global = quarter_to_global(vlad_A_quarter)
         vlad_B_global = quarter_to_global(vlad_B_quarter)
 
         def norm(vlad_x):
+            """
+            Compute the norm of a matrix.
+
+            Args:
+                vlad_x: (array): write your description
+            """
             N, B, C, _ = vlad_x.size()
             vlad_x = F.normalize(vlad_x, p=2, dim=3)  # intra-normalization
             vlad_x = vlad_x.view(N, B, -1)  # flatten
@@ -185,6 +294,13 @@ class EmbedRegionNet(nn.Module):
         return score, vlad_A, vlad_B
 
     def _forward_train(self, x):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         B, C, H, W = x.size()
         x = x.view(self.tuple_size, -1, C, H, W)
 
@@ -194,6 +310,13 @@ class EmbedRegionNet(nn.Module):
         return self._compute_region_sim(anchors, pairs)
 
     def forward(self, x):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         pool_x, x = self.base_model(x)
 
         if (not self.training):

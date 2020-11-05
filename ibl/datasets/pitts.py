@@ -9,6 +9,12 @@ from ..utils.serialization import write_json, read_mat
 from ..utils.dist_utils import synchronize
 
 def parse_dbStruct(path):
+    """
+    Parse the db file.
+
+    Args:
+        path: (str): write your description
+    """
     matStruct = read_mat(path)
     dbImage = [f[0].item() for f in matStruct[1]]
     utmDb = matStruct[2].T
@@ -24,6 +30,15 @@ def parse_dbStruct(path):
 class Pittsburgh(Dataset):
 
     def __init__(self, root, scale='250k', verbose=True):
+        """
+        Initialize the scaling factor.
+
+        Args:
+            self: (todo): write your description
+            root: (str): write your description
+            scale: (float): write your description
+            verbose: (bool): write your description
+        """
         super(Pittsburgh, self).__init__(root)
         self.scale = scale
 
@@ -31,6 +46,12 @@ class Pittsburgh(Dataset):
         self.load(verbose, scale)
 
     def arrange(self):
+        """
+        Return a pids.
+
+        Args:
+            self: (todo): write your description
+        """
         if self._check_integrity(self.scale):
             return
 
@@ -44,6 +65,12 @@ class Pittsburgh(Dataset):
         utms = []
         q_pids, db_pids = {}, {}
         def register(split):
+            """
+            Register a list from a list.
+
+            Args:
+                split: (todo): write your description
+            """
             struct = parse_dbStruct(osp.join(raw_dir, 'pitts'+self.scale+'_'+split+'.mat'))
             q_ids = []
             for fpath, utm in zip(struct.qImage, struct.utmQ):

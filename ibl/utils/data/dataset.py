@@ -9,6 +9,15 @@ from ..serialization import read_json, read_mat
 
 
 def _pluck(identities, utm, indices, relabel=False):
+    """
+    Return a list of images.
+
+    Args:
+        identities: (list): write your description
+        utm: (array): write your description
+        indices: (array): write your description
+        relabel: (str): write your description
+    """
     ret = []
     for index, pid in enumerate(indices):
         pid_images = identities[pid]
@@ -21,6 +30,15 @@ def _pluck(identities, utm, indices, relabel=False):
     return sorted(ret)
 
 def get_groundtruth(query, gallery, intra_thres, inter_thres=None):
+    """
+    Given a list of the best matching query.
+
+    Args:
+        query: (str): write your description
+        gallery: (todo): write your description
+        intra_thres: (str): write your description
+        inter_thres: (str): write your description
+    """
     utm_query = [[u[2], u[3]] for u in query]
     utm_gallery = [[u[2], u[3]] for u in gallery]
     neigh = NearestNeighbors(n_jobs=-1)
@@ -41,6 +59,15 @@ def get_groundtruth(query, gallery, intra_thres, inter_thres=None):
 
 class Dataset(object):
     def __init__(self, root, intra_thres=10, inter_thres=25):
+        """
+        Initialize the database
+
+        Args:
+            self: (todo): write your description
+            root: (str): write your description
+            intra_thres: (float): write your description
+            inter_thres: (str): write your description
+        """
         self.root = root
         self.intra_thres = intra_thres
         self.inter_thres = inter_thres
@@ -52,9 +79,23 @@ class Dataset(object):
 
     @property
     def images_dir(self):
+        """
+        The absolute path of the images.
+
+        Args:
+            self: (todo): write your description
+        """
         return osp.join(self.root, 'raw')
 
     def load(self, verbose, scale=None):
+        """
+        Load the identities from the db.
+
+        Args:
+            self: (todo): write your description
+            verbose: (bool): write your description
+            scale: (float): write your description
+        """
         if (scale is None):
             splits = read_json(osp.join(self.root, 'splits.json'))
             meta = read_json(osp.join(self.root, 'meta.json'))
@@ -113,6 +154,13 @@ class Dataset(object):
                   .format(len(db_test_pids), len(self.db_test)))
 
     def _check_integrity(self, scale=None):
+        """
+        Check the scale is_integrity.
+
+        Args:
+            self: (todo): write your description
+            scale: (float): write your description
+        """
         if (scale is None):
             return osp.isfile(osp.join(self.root, 'meta.json')) and \
                    osp.isfile(osp.join(self.root, 'splits.json'))

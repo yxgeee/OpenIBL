@@ -33,6 +33,12 @@ from ibl.utils.dist_utils import init_dist, synchronize, convert_sync_bn
 start_epoch = best_recall5 = 0
 
 def get_data(args, iters):
+    """
+    Get training dataset.
+
+    Args:
+        iters: (int): write your description
+    """
     root = osp.join(args.data_dir, args.dataset)
     dataset = datasets.create(args.dataset, root, scale=args.scale)
 
@@ -71,6 +77,20 @@ def get_data(args, iters):
     return dataset, train_loader, val_loader, test_loader, sampler, train_extract_loader
 
 def update_sampler(sampler, model, loader, query, gallery, sub_set, vlad=True, gpu=None, sync_gather=False):
+    """
+    Update sampler.
+
+    Args:
+        sampler: (todo): write your description
+        model: (todo): write your description
+        loader: (todo): write your description
+        query: (str): write your description
+        gallery: (todo): write your description
+        sub_set: (todo): write your description
+        vlad: (todo): write your description
+        gpu: (todo): write your description
+        sync_gather: (str): write your description
+    """
     if (dist.get_rank()==0):
         print ("===> Start extracting features for sorting gallery")
     features = extract_features(model, loader, sorted(list(set(query) | set(gallery))),
@@ -83,6 +103,11 @@ def update_sampler(sampler, model, loader, query, gallery, sub_set, vlad=True, g
     del distmat
 
 def get_model(args):
+    """
+    Get the model.
+
+    Args:
+    """
     base_model = models.create(args.arch, train_layers=args.layers, matconvnet='logs/vd16_offtheshelf_conv5_3_max.pth')
     if args.vlad:
         pool_layer = models.create('netvlad', dim=base_model.feature_dim)
@@ -110,10 +135,20 @@ def get_model(args):
     return model
 
 def main():
+    """
+    Main entry point.
+
+    Args:
+    """
     args = parser.parse_args()
     main_worker(args)
 
 def main_worker(args):
+    """
+    Main function.
+
+    Args:
+    """
     global start_epoch, best_recall5
     init_dist(args.launcher, args)
     synchronize()

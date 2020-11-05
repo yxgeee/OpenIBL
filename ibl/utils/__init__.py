@@ -4,6 +4,12 @@ import torch
 
 
 def to_numpy(tensor):
+    """
+    Convert tensor to tensor.
+
+    Args:
+        tensor: (todo): write your description
+    """
     if torch.is_tensor(tensor):
         return tensor.cpu().numpy()
     elif type(tensor).__module__ != 'numpy':
@@ -13,6 +19,12 @@ def to_numpy(tensor):
 
 
 def to_torch(ndarray):
+    """
+    Convert numpy array to ndarray.
+
+    Args:
+        ndarray: (array): write your description
+    """
     if type(ndarray).__module__ == 'numpy':
         return torch.from_numpy(ndarray)
     elif not torch.is_tensor(ndarray):

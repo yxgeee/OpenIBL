@@ -15,6 +15,16 @@ class Trainer(object):
     # 2. "Stochastic Attraction-Repulsion Embedding for Large Scale Localization" (ICCV'19), loss_type='sare_ind' or 'sare_joint'
     #############################
     def __init__(self, model, margin=0.3, gpu=None, temp=0.07):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            model: (todo): write your description
+            margin: (todo): write your description
+            gpu: (todo): write your description
+            temp: (todo): write your description
+        """
         super(Trainer, self).__init__()
         self.model = model
         self.gpu = gpu
@@ -23,6 +33,20 @@ class Trainer(object):
 
     def train(self, epoch, sub_id, data_loader, optimizer, train_iters,
                         print_freq=1, vlad=True, loss_type='triplet'):
+        """
+        Train the model.
+
+        Args:
+            self: (todo): write your description
+            epoch: (int): write your description
+            sub_id: (str): write your description
+            data_loader: (todo): write your description
+            optimizer: (todo): write your description
+            train_iters: (int): write your description
+            print_freq: (float): write your description
+            vlad: (array): write your description
+            loss_type: (str): write your description
+        """
         self.model.train()
 
         batch_time = AverageMeter()
@@ -62,12 +86,28 @@ class Trainer(object):
 
 
     def _parse_data(self, inputs):
+        """
+        Parse image data.
+
+        Args:
+            self: (todo): write your description
+            inputs: (todo): write your description
+        """
         imgs = [input[0] for input in inputs]
         imgs = torch.stack(imgs).permute(1,0,2,3,4)
         # imgs_size: batch_size*triplet_size*C*H*W
         return imgs.cuda(self.gpu)
 
     def _forward(self, inputs, vlad, loss_type):
+        """
+        Parameters ---------- inputs.
+
+        Args:
+            self: (todo): write your description
+            inputs: (todo): write your description
+            vlad: (todo): write your description
+            loss_type: (str): write your description
+        """
         B, N, C, H, W = inputs.size()
         inputs = inputs.view(-1, C, H, W)
 
@@ -80,6 +120,16 @@ class Trainer(object):
             return self._get_loss(outputs_vlad, loss_type, B, N)
 
     def _get_loss(self, outputs, loss_type, B, N):
+        """
+        Gets loss.
+
+        Args:
+            self: (todo): write your description
+            outputs: (todo): write your description
+            loss_type: (str): write your description
+            B: (todo): write your description
+            N: (todo): write your description
+        """
         outputs = outputs.view(B, N, -1)
         L = outputs.size(-1)
 
@@ -169,6 +219,18 @@ class SFRSTrainer(object):
     #############################
     def __init__(self, model, model_cache, margin=0.3,
                     neg_num=10, gpu=None, temp=[0.07,]):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            model: (todo): write your description
+            model_cache: (todo): write your description
+            margin: (todo): write your description
+            neg_num: (int): write your description
+            gpu: (todo): write your description
+            temp: (todo): write your description
+        """
         super(SFRSTrainer, self).__init__()
         self.model = model
         self.model_cache = model_cache
@@ -180,6 +242,21 @@ class SFRSTrainer(object):
 
     def train(self, gen, epoch, sub_id, data_loader, optimizer, train_iters,
                     print_freq=1, lambda_soft=0.5, loss_type='sare_ind'):
+        """
+        Train the model.
+
+        Args:
+            self: (todo): write your description
+            gen: (todo): write your description
+            epoch: (int): write your description
+            sub_id: (str): write your description
+            data_loader: (todo): write your description
+            optimizer: (todo): write your description
+            train_iters: (int): write your description
+            print_freq: (float): write your description
+            lambda_soft: (array): write your description
+            loss_type: (str): write your description
+        """
         self.model.train()
         self.model_cache.train()
 
@@ -226,6 +303,13 @@ class SFRSTrainer(object):
                               losses_soft.val, losses_soft.avg))
 
     def _parse_data(self, inputs):
+        """
+        Parse the background image
+
+        Args:
+            self: (todo): write your description
+            inputs: (todo): write your description
+        """
         imgs = [input[0] for input in inputs]
         imgs = torch.stack(imgs).permute(1,0,2,3,4)
         imgs_easy = imgs[:,:self.neg_num+2]
@@ -233,6 +317,16 @@ class SFRSTrainer(object):
         return imgs_easy.cuda(self.gpu), imgs_diff.cuda(self.gpu)
 
     def _forward(self, inputs_easy, inputs_diff, loss_type, gen):
+        """
+        Forward computation
+
+        Args:
+            self: (todo): write your description
+            inputs_easy: (todo): write your description
+            inputs_diff: (todo): write your description
+            loss_type: (str): write your description
+            gen: (todo): write your description
+        """
         B, _, C, H, W = inputs_easy.size()
         inputs_easy = inputs_easy.view(-1, C, H, W)
         inputs_diff = inputs_diff.view(-1, C, H, W)
@@ -259,6 +353,17 @@ class SFRSTrainer(object):
         return loss_hard, loss_soft
 
     def _get_hard_loss(self, anchors, positives, negatives, score_neg, loss_type):
+        """
+        Calculate loss.
+
+        Args:
+            self: (todo): write your description
+            anchors: (todo): write your description
+            positives: (todo): write your description
+            negatives: (str): write your description
+            score_neg: (str): write your description
+            loss_type: (str): write your description
+        """
         # select the most difficult regions for negatives
         score_arg = score_neg.view(self.neg_num,-1).argmax(1)
         score_arg = score_arg.unsqueeze(-1).unsqueeze(-1).expand_as(negatives).contiguous()
@@ -270,6 +375,17 @@ class SFRSTrainer(object):
                             select_negatives.unsqueeze(0).contiguous(), 1, loss_type)
 
     def _get_loss(self, output_anchors, output_positives, output_negatives, B, loss_type):
+        """
+        Calculate loss.
+
+        Args:
+            self: (todo): write your description
+            output_anchors: (todo): write your description
+            output_positives: (todo): write your description
+            output_negatives: (todo): write your description
+            B: (todo): write your description
+            loss_type: (str): write your description
+        """
         L = output_anchors.size(-1)
 
         if (loss_type=='triplet'):

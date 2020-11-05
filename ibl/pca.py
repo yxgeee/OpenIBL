@@ -21,6 +21,15 @@ import torch.distributed as dist
 class PCA():
     def __init__(self, pca_n_components=4096, pca_whitening=True,
                  pca_parameters_path='./logs/pca_params.h5'):
+        """
+        Initialize pca component.
+
+        Args:
+            self: (todo): write your description
+            pca_n_components: (todo): write your description
+            pca_whitening: (str): write your description
+            pca_parameters_path: (str): write your description
+        """
         self.pca_n_components = pca_n_components
         self.pca_whitening = pca_whitening
         self.pca_parameters_path = pca_parameters_path
@@ -84,6 +93,13 @@ class PCA():
         h5file.close()
 
     def load(self, gpu=None):
+        """
+        Load htmu5 file.
+
+        Args:
+            self: (todo): write your description
+            gpu: (str): write your description
+        """
         try:
             rank = dist.get_rank()
         except:
