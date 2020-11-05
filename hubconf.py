@@ -3,6 +3,12 @@ import torch
 from ibl import models
 
 def vgg16_netvlad(pretrained=False):
+    """
+    Vgg16 network.
+
+    Args:
+        pretrained: (bool): write your description
+    """
     base_model = models.create('vgg16', pretrained=False)
     pool_layer = models.create('netvlad', dim=base_model.feature_dim)
     model = models.create('embednetpca', base_model, pool_layer)

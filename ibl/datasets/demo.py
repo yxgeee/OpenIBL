@@ -19,12 +19,27 @@ class Demo(Dataset):
     """
 
     def __init__(self, root, scale=None, verbose=True):
+        """
+        Initialize the root layer.
+
+        Args:
+            self: (todo): write your description
+            root: (str): write your description
+            scale: (float): write your description
+            verbose: (bool): write your description
+        """
         super(Demo, self).__init__(root)
 
         self.arrange()
         self.load(verbose)
 
     def arrange(self):
+        """
+        Determine the cross - validation.
+
+        Args:
+            self: (todo): write your description
+        """
         if self._check_integrity():
             return
 

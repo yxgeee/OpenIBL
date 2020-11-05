@@ -27,6 +27,17 @@ class VGG(nn.Module):
 
     def __init__(self, depth, pretrained=True, cut_at_pooling=False,
                     train_layers='conv5', matconvnet=None):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            depth: (float): write your description
+            pretrained: (bool): write your description
+            cut_at_pooling: (todo): write your description
+            train_layers: (list): write your description
+            matconvnet: (todo): write your description
+        """
         super(VGG, self).__init__()
         self.pretrained = pretrained
         self.depth = depth
@@ -53,12 +64,25 @@ class VGG(nn.Module):
                     p.requires_grad = False
 
     def _init_params(self):
+        """
+        Initialize the parameters.
+
+        Args:
+            self: (todo): write your description
+        """
         # optional load pretrained weights from matconvnet
         if (self.matconvnet is not None):
             self.base.load_state_dict(torch.load(self.matconvnet))
             self.pretrained = True
 
     def forward(self, x):
+        """
+        Perform of the forward function.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         x = self.base(x)
 
         if self.cut_at_pooling:
@@ -70,6 +94,12 @@ class VGG(nn.Module):
         return pool_x, x
 
     def reset_params(self):
+        """
+        Reset all modules.
+
+        Args:
+            self: (todo): write your description
+        """
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 init.kaiming_normal_(m.weight, mode='fan_out')
@@ -87,4 +117,9 @@ class VGG(nn.Module):
                     init.constant_(m.bias, 0)
 
 def vgg16(**kwargs):
+    """
+    Create a vgg16 from a vgg.
+
+    Args:
+    """
     return VGG(16, **kwargs)

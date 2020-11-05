@@ -9,6 +9,13 @@ import torch.utils.data.distributed
 import torch.multiprocessing as mp
 
 def init_dist(launcher, args, backend='nccl'):
+    """
+    Initialize distcher.
+
+    Args:
+        launcher: (todo): write your description
+        backend: (todo): write your description
+    """
     if mp.get_start_method(allow_none=True) is None:
         mp.set_start_method('spawn')
     if launcher == 'pytorch':
@@ -19,6 +26,12 @@ def init_dist(launcher, args, backend='nccl'):
         raise ValueError('Invalid launcher type: {}'.format(launcher))
 
 def init_dist_pytorch(args, backend="nccl"):
+    """
+    Initialize a device.
+
+    Args:
+        backend: (str): write your description
+    """
     args.rank = int(os.environ['LOCAL_RANK'])
     args.ngpus_per_node = torch.cuda.device_count()
     args.gpu = args.rank
@@ -27,6 +40,12 @@ def init_dist_pytorch(args, backend="nccl"):
     dist.init_process_group(backend=backend)
 
 def init_dist_slurm(args, backend="nccl"):
+    """
+    Initialize the device.
+
+    Args:
+        backend: (str): write your description
+    """
     args.rank = int(os.environ['SLURM_PROCID'])
     args.world_size = int(os.environ['SLURM_NTASKS'])
     node_list = os.environ['SLURM_NODELIST']
@@ -42,6 +61,14 @@ def init_dist_slurm(args, backend="nccl"):
     args.total_gpus = dist.get_world_size()
 
 def simple_group_split(world_size, rank, num_groups):
+    """
+    Splits a list of lists into multiple lists.
+
+    Args:
+        world_size: (int): write your description
+        rank: (int): write your description
+        num_groups: (int): write your description
+    """
     groups = []
     rank_list = np.split(np.arange(world_size), num_groups)
     rank_list = [list(map(int, x)) for x in rank_list]
@@ -52,6 +79,14 @@ def simple_group_split(world_size, rank, num_groups):
     return groups[rank//group_size]
 
 def convert_sync_bn(model, process_group=None, gpu=None):
+    """
+    Convert model to_group.
+
+    Args:
+        model: (todo): write your description
+        process_group: (todo): write your description
+        gpu: (todo): write your description
+    """
     for _, (child_name, child) in enumerate(model.named_children()):
         if isinstance(child, nn.modules.batchnorm._BatchNorm):
             m = nn.SyncBatchNorm.convert_sync_batchnorm(child, process_group)

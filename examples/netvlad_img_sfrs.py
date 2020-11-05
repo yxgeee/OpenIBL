@@ -33,6 +33,12 @@ from ibl.utils.rerank import re_ranking
 start_epoch = start_gen = best_recall5 = 0
 
 def get_data(args, iters):
+    """
+    Get training dataset.
+
+    Args:
+        iters: (int): write your description
+    """
     root = osp.join(args.data_dir, args.dataset)
     dataset = datasets.create(args.dataset, root, scale=args.scale)
 
@@ -73,6 +79,22 @@ def get_data(args, iters):
 
 def update_sampler(sampler, model, loader, query, gallery, sub_set, rerank=False,
                         vlad=True, gpu=None, sync_gather=False, lambda_value=0.1):
+    """
+    Update sampler. sampler.
+
+    Args:
+        sampler: (todo): write your description
+        model: (todo): write your description
+        loader: (todo): write your description
+        query: (str): write your description
+        gallery: (todo): write your description
+        sub_set: (todo): write your description
+        rerank: (todo): write your description
+        vlad: (todo): write your description
+        gpu: (todo): write your description
+        sync_gather: (str): write your description
+        lambda_value: (todo): write your description
+    """
     if (dist.get_rank()==0):
         print ("===> Start extracting features for sorting gallery")
     features = extract_features(model, loader, sorted(list(set(query) | set(gallery))),
@@ -94,6 +116,11 @@ def update_sampler(sampler, model, loader, query, gallery, sub_set, rerank=False
     del distmat, distmat_jac
 
 def get_model(args):
+    """
+    Get a model.
+
+    Args:
+    """
     base_model = models.create(args.arch, train_layers=args.layers, matconvnet='logs/vd16_offtheshelf_conv5_3_max.pth')
     pool_layer = models.create('netvlad', dim=base_model.feature_dim)
     initcache = osp.join(args.init_dir, args.arch + '_' + args.dataset + '_' + str(args.num_clusters) + '_desc_cen.hdf5')
@@ -115,10 +142,20 @@ def get_model(args):
     return model
 
 def main():
+    """
+    Main entry point.
+
+    Args:
+    """
     args = parser.parse_args()
     main_worker(args)
 
 def main_worker(args):
+    """
+    The main function.
+
+    Args:
+    """
     global start_epoch, start_gen, best_recall5
     init_dist(args.launcher, args)
     synchronize()

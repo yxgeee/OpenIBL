@@ -30,6 +30,17 @@ import gc
 
 
 def re_ranking(q_g_dist, q_q_dist, g_g_dist, k1=20, k2=6, lambda_value=0.3):
+    """
+    R compute the q q^2 q^ { q_g_dist_dist_dist_dist ).
+
+    Args:
+        q_g_dist: (todo): write your description
+        q_q_dist: (todo): write your description
+        g_g_dist: (todo): write your description
+        k1: (array): write your description
+        k2: (array): write your description
+        lambda_value: (array): write your description
+    """
 
     # The following naming, e.g. gallery_num, is different from outer scope.
     # Don't care about it.

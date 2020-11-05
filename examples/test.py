@@ -27,6 +27,11 @@ from ibl.utils.dist_utils import init_dist, synchronize
 
 
 def get_data(args):
+    """
+    Get training dataset.
+
+    Args:
+    """
     root = osp.join(args.data_dir, args.dataset)
     dataset = datasets.create(args.dataset, root, scale=args.scale)
 
@@ -56,6 +61,11 @@ def get_data(args):
     return dataset, pitts_train, train_extract_loader, test_loader_q, test_loader_db
 
 def get_model(args):
+    """
+    Get a model.
+
+    Args:
+    """
     base_model = models.create(args.arch)
     if args.vlad:
         pool_layer = models.create('netvlad', dim=base_model.feature_dim)
@@ -70,11 +80,21 @@ def get_model(args):
     return model
 
 def main():
+    """
+    Main entry point.
+
+    Args:
+    """
     args = parser.parse_args()
 
     main_worker(args)
 
 def main_worker(args):
+    """
+    Evaluate the model.
+
+    Args:
+    """
     init_dist(args.launcher, args)
     synchronize()
     cudnn.benchmark = True

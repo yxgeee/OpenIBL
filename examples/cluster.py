@@ -25,6 +25,12 @@ from ibl.utils.serialization import load_checkpoint, copy_state_dict
 
 
 def get_data(args, nIm):
+    """
+    Get the random dataset.
+
+    Args:
+        nIm: (bool): write your description
+    """
     root = osp.join(args.data_dir, args.dataset)
     dataset = datasets.create(args.dataset, root, scale='30k')
     cluster_set = list(set(dataset.q_train) | set(dataset.db_train))
@@ -39,12 +45,22 @@ def get_data(args, nIm):
     return dataset, cluster_loader
 
 def get_model(args):
+    """
+    Get model.
+
+    Args:
+    """
     model = models.create(args.arch, pretrained=True, cut_at_pooling=True, matconvnet='logs/vd16_offtheshelf_conv5_3_max.pth')
     model.cuda()
     model = nn.DataParallel(model)
     return model
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     args = parser.parse_args()
 
     if args.seed is not None:
@@ -57,6 +73,11 @@ def main():
     main_worker(args)
 
 def main_worker(args):
+    """
+    Main function.
+
+    Args:
+    """
     cudnn.benchmark = True
 
     print("==========\nArgs:{}\n==========".format(args))

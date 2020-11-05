@@ -12,6 +12,11 @@ __factory = {
 
 
 def names():
+    """
+    Return a list of all the keys.
+
+    Args:
+    """
     return sorted(__factory.keys())
 
 
@@ -32,5 +37,12 @@ def create(name, root, *args, **kwargs):
 
 
 def get_dataset(name, root, *args, **kwargs):
+    """
+    Shortcut for get_dataset.
+
+    Args:
+        name: (str): write your description
+        root: (str): write your description
+    """
     warnings.warn("get_dataset is deprecated. Use create instead.")
     return create(name, root, *args, **kwargs)

@@ -12,23 +12,51 @@ from .osutils import mkdir_if_missing
 
 
 def read_json(fpath):
+    """
+    Reads a file.
+
+    Args:
+        fpath: (str): write your description
+    """
     with open(fpath, 'r') as f:
         obj = json.load(f)
     return obj
 
 
 def write_json(obj, fpath):
+    """
+    Writes a dictionary to a file.
+
+    Args:
+        obj: (todo): write your description
+        fpath: (str): write your description
+    """
     mkdir_if_missing(osp.dirname(fpath))
     with open(fpath, 'w') as f:
         json.dump(obj, f, indent=4, separators=(',', ': '))
 
 
 def read_mat(path, key='dbStruct'):
+    """
+    Read matlab matlab matlab matlab matrix.
+
+    Args:
+        path: (str): write your description
+        key: (str): write your description
+    """
     mat = loadmat(path)
     ws = mat[key].item()
     return ws
 
 def save_checkpoint(state, is_best, fpath='checkpoint.pth.tar'):
+    """
+    Save checkpoint to checkpoint.
+
+    Args:
+        state: (todo): write your description
+        is_best: (bool): write your description
+        fpath: (str): write your description
+    """
     mkdir_if_missing(osp.dirname(fpath))
     torch.save(state, fpath)
     if is_best:
@@ -36,6 +64,12 @@ def save_checkpoint(state, is_best, fpath='checkpoint.pth.tar'):
 
 
 def load_checkpoint(fpath):
+    """
+    Load checkpoint from file.
+
+    Args:
+        fpath: (str): write your description
+    """
     if osp.isfile(fpath):
         checkpoint = torch.load(fpath, map_location=torch.device('cpu'))
         try:
@@ -50,6 +84,14 @@ def load_checkpoint(fpath):
 
 
 def copy_state_dict(state_dict, model, strip=None):
+    """
+    Copy model_state into a dictionary.
+
+    Args:
+        state_dict: (dict): write your description
+        model: (todo): write your description
+        strip: (str): write your description
+    """
     tgt_state = model.state_dict()
     copied_names = set()
     for name, param in state_dict.items():

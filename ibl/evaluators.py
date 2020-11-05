@@ -20,6 +20,15 @@ from .utils.data.preprocessor import Preprocessor
 from .utils import to_torch
 
 def extract_cnn_feature(model, inputs, vlad=True, gpu=None):
+    """
+    Extracts a linear model.
+
+    Args:
+        model: (todo): write your description
+        inputs: (array): write your description
+        vlad: (todo): write your description
+        gpu: (todo): write your description
+    """
     model.eval()
     inputs = to_torch(inputs).cuda(gpu)
     outputs = model(inputs)
@@ -35,6 +44,19 @@ def extract_cnn_feature(model, inputs, vlad=True, gpu=None):
 
 def extract_features(model, data_loader, dataset, print_freq=10,
                 vlad=True, pca=None, gpu=None, sync_gather=False):
+    """
+    Extract features.
+
+    Args:
+        model: (todo): write your description
+        data_loader: (todo): write your description
+        dataset: (array): write your description
+        print_freq: (str): write your description
+        vlad: (todo): write your description
+        pca: (todo): write your description
+        gpu: (todo): write your description
+        sync_gather: (str): write your description
+    """
     model.eval()
     batch_time = AverageMeter()
     data_time = AverageMeter()
@@ -103,6 +125,15 @@ def extract_features(model, data_loader, dataset, print_freq=10,
     return features_dict
 
 def pairwise_distance(features, query=None, gallery=None, metric=None):
+    """
+    Compute distance between features.
+
+    Args:
+        features: (todo): write your description
+        query: (str): write your description
+        gallery: (todo): write your description
+        metric: (str): write your description
+    """
     if query is None and gallery is None:
         n = len(features)
         x = torch.cat(list(features.values()))
@@ -130,6 +161,14 @@ def pairwise_distance(features, query=None, gallery=None, metric=None):
     return dist_m, x.numpy(), y.numpy()
 
 def spatial_nms(pred, db_ids, topN):
+    """
+    Returns a list of indices that predicate predicate.
+
+    Args:
+        pred: (todo): write your description
+        db_ids: (str): write your description
+        topN: (todo): write your description
+    """
     assert(len(pred)==len(db_ids))
     pred_select = pred[:topN]
     pred_pids = [db_ids[i] for i in pred_select]
@@ -140,6 +179,16 @@ def spatial_nms(pred, db_ids, topN):
     return [pred_select[i] for i in pred_pids_unique]
 
 def evaluate_all(distmat, gt, gallery, recall_topk=[1, 5, 10], nms=False):
+    """
+    Evaluate the b - recall.
+
+    Args:
+        distmat: (todo): write your description
+        gt: (todo): write your description
+        gallery: (todo): write your description
+        recall_topk: (bool): write your description
+        nms: (todo): write your description
+    """
     sort_idx = np.argsort(distmat, axis=1)
     del distmat
     db_ids = [db[1] for db in gallery]
@@ -169,6 +218,13 @@ def evaluate_all(distmat, gt, gallery, recall_topk=[1, 5, 10], nms=False):
 
 class Evaluator(object):
     def __init__(self, model):
+        """
+        Initialize the model.
+
+        Args:
+            self: (todo): write your description
+            model: (todo): write your description
+        """
         super(Evaluator, self).__init__()
         self.model = model
         self.rank = dist.get_rank()
@@ -176,6 +232,26 @@ class Evaluator(object):
     def evaluate(self, query_loader, dataset, query, gallery, ground_truth, gallery_loader=None, \
                     vlad=True, pca=None, rerank=False, gpu=None, sync_gather=False, \
                     nms=False, rr_topk=25, lambda_value=0):
+        """
+        Evaluate the model.
+
+        Args:
+            self: (todo): write your description
+            query_loader: (todo): write your description
+            dataset: (todo): write your description
+            query: (str): write your description
+            gallery: (todo): write your description
+            ground_truth: (todo): write your description
+            gallery_loader: (todo): write your description
+            vlad: (todo): write your description
+            pca: (todo): write your description
+            rerank: (todo): write your description
+            gpu: (todo): write your description
+            sync_gather: (str): write your description
+            nms: (todo): write your description
+            rr_topk: (todo): write your description
+            lambda_value: (todo): write your description
+        """
         if (gallery_loader is not None):
             features = extract_features(self.model, query_loader, query,
                                         vlad=vlad, pca=pca, gpu=gpu, sync_gather=sync_gather)

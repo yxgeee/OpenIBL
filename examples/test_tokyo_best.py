@@ -14,6 +14,11 @@ from ibl.utils.dist_utils import init_dist, synchronize
 
 
 def get_data(args):
+    """
+    Load and parse dataset.
+
+    Args:
+    """
     root = osp.join(args.data_dir, 'tokyo')
     dataset = datasets.create('tokyo', root)
 
@@ -35,6 +40,12 @@ def get_data(args):
     return dataset, test_loader_q, test_loader_db
 
 def vgg16_netvlad(pretrained=False):
+    """
+    Vgg16 network.
+
+    Args:
+        pretrained: (bool): write your description
+    """
     base_model = models.create('vgg16', pretrained=False)
     pool_layer = models.create('netvlad', dim=base_model.feature_dim)
     model = models.create('embednetpca', base_model, pool_layer)
@@ -43,6 +54,11 @@ def vgg16_netvlad(pretrained=False):
     return model
 
 def get_model(args):
+    """
+    Construct a model.
+
+    Args:
+    """
     model = vgg16_netvlad(pretrained=True)
     model.cuda(args.gpu)
     model = nn.parallel.DistributedDataParallel(
@@ -51,6 +67,11 @@ def get_model(args):
     return model
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     args = parser.parse_args()
     init_dist(args.launcher, args)
     synchronize()
