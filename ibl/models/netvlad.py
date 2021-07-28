@@ -135,7 +135,7 @@ class EmbedRegionNet(nn.Module):
         feature_A = reshape(feature_A)
         feature_B = reshape(feature_B)
 
-        # computer quarter-region features
+        # compute quarter-region features
         def aggregate_quarter(x):
             N, C, B, H, W = x.size()
             x = x.permute(0,2,1,3,4).contiguous()
@@ -148,7 +148,7 @@ class EmbedRegionNet(nn.Module):
         vlad_A_quarter = aggregate_quarter(feature_A)
         vlad_B_quarter = aggregate_quarter(feature_B)
 
-        # computer half-region features
+        # compute half-region features
         def quarter_to_half(vlad_x):
             return torch.stack((vlad_x[:,0]+vlad_x[:,1], vlad_x[:,2]+vlad_x[:,3], \
                                 vlad_x[:,0]+vlad_x[:,2], vlad_x[:,1]+vlad_x[:,3]), dim=1).contiguous()
@@ -156,7 +156,7 @@ class EmbedRegionNet(nn.Module):
         vlad_A_half = quarter_to_half(vlad_A_quarter)
         vlad_B_half = quarter_to_half(vlad_B_quarter)
 
-        # computer global-image features
+        # compute global-image features
         def quarter_to_global(vlad_x):
             return vlad_x.sum(1).unsqueeze(1).contiguous()
 
