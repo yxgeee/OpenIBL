@@ -2,8 +2,6 @@ from __future__ import print_function, absolute_import
 import time
 from collections import OrderedDict
 import numpy as np
-from sklearn.preprocessing import normalize
-from sklearn.metrics import pairwise_distances
 
 import torch
 import torch.nn.functional as F
@@ -73,34 +71,50 @@ def extract_features(model, data_loader, dataset, print_freq=10,
     if (pca is not None):
         del pca
 
+    cpu_group = dist.new_group(None, backend="gloo")
     if (sync_gather):
         # all gather features in parallel
-        # cost more GPU memory but less time
-        features = torch.cat(features).cuda(gpu)
-        all_features = [torch.empty_like(features) for _ in range(world_size)]
-        dist.all_gather(all_features, features)
-        del features
-        all_features = torch.cat(all_features).cpu()[:len(dataset)]
-        features_dict = OrderedDict()
-        for fname, output in zip(dataset, all_features):
-            features_dict[fname[0]] = output
-        del all_features
+        # cost more memory but less time
+        features = torch.cat(features)
+        if rank == 0:
+            # gather all features on rank 0
+            all_features = [torch.empty_like(features) for _ in range(world_size)]
+            dist.gather(features, all_features, group=cpu_group)
+            del features
+            all_features = torch.cat(all_features)[:len(dataset)]
+            features_dict = OrderedDict()
+            for fname, output in zip(dataset, all_features):
+                features_dict[fname[0]] = output
+            del all_features
+        else:
+            # if not rank 0 then just send, dont receive
+            dist.gather(features, group=cpu_group) 
     else:
         # broadcast features in sequence
-        # cost more time but less GPU memory
-        bc_features = torch.cat(features).cuda(gpu)
-        features_dict = OrderedDict()
-        for k in range(world_size):
-            bc_features.data.copy_(torch.cat(features))
-            if (rank==0):
-                print("gathering features from rank no.{}".format(k))
-            dist.broadcast(bc_features, k)
-            l = bc_features.cpu().size(0)
-            for fname, output in zip(dataset[k*l:(k+1)*l], bc_features.cpu()):
-                features_dict[fname[0]] = output
-        del bc_features, features
+        # cost more time but less memory (maybe?)
+        features = torch.cat(features)
 
-    return features_dict
+        if rank == 0:
+            features_dict = OrderedDict()
+            for k in range(world_size):
+                print("gathering features from rank no.{}".format(k))
+
+                if k != 0:
+                    dist.recv(features, src=k, group=cpu_group)
+
+                l = features.size(0)
+                for fname, output in zip(dataset[k*l:(k+1)*l], features):
+                    features_dict[fname[0]] = output.clone()
+        else:
+            # if not rank 0 then send only
+            dist.send(features, dst=0, group=cpu_group)
+        del features
+
+    if rank == 0:
+        return features_dict
+    else: 
+        # return empty dict as we're not duplicating data
+        return {}
 
 def pairwise_distance(features, query=None, gallery=None, metric=None):
     if query is None and gallery is None:
@@ -113,8 +127,7 @@ def pairwise_distance(features, query=None, gallery=None, metric=None):
         dist_m = dist_m.expand(n, n) - 2 * torch.mm(x, x.t())
         return dist_m, None, None
 
-    if (dist.get_rank()==0):
-        print ("===> Start calculating pairwise distances")
+    print ("===> Start calculating pairwise distances")
     x = torch.cat([features[f].unsqueeze(0) for f, _, _, _ in query], 0)
     y = torch.cat([features[f].unsqueeze(0) for f, _, _, _ in gallery], 0)
 
@@ -144,8 +157,7 @@ def evaluate_all(distmat, gt, gallery, recall_topk=[1, 5, 10], nms=False):
     del distmat
     db_ids = [db[1] for db in gallery]
 
-    if (dist.get_rank()==0):
-        print("===> Start calculating recalls")
+    print("===> Start calculating recalls")
     correct_at_n = np.zeros(len(recall_topk))
 
     for qIx, pred in enumerate(sort_idx):
@@ -160,12 +172,10 @@ def evaluate_all(distmat, gt, gallery, recall_topk=[1, 5, 10], nms=False):
     recalls = correct_at_n / len(gt)
     del sort_idx
 
-    if (dist.get_rank()==0):
-        print('Recall Scores:')
-        for i, k in enumerate(recall_topk):
-            print('  top-{:<4}{:12.1%}'.format(k, recalls[i]))
+    print('Recall Scores:')
+    for i, k in enumerate(recall_topk):
+        print('  top-{:<4}{:12.1%}'.format(k, recalls[i]))
     return recalls
-
 
 class Evaluator(object):
     def __init__(self, model):
@@ -186,16 +196,16 @@ class Evaluator(object):
             features = extract_features(self.model, query_loader, dataset,
                             vlad=vlad, pca=pca, gpu=gpu, sync_gather=sync_gather)
 
-        distmat, _, _ = pairwise_distance(features, query, gallery)
-        recalls = evaluate_all(distmat, ground_truth, gallery, nms=nms)
-        if (not rerank):
-            return recalls
-
         if (self.rank==0):
+            distmat, _, _ = pairwise_distance(features, query, gallery)
+            recalls = evaluate_all(distmat, ground_truth, gallery, nms=nms)
+            if (not rerank):
+                return recalls
+
             print('Applying re-ranking ...')
             distmat_gg, _, _ = pairwise_distance(features, gallery, gallery)
             distmat_qq, _, _ = pairwise_distance(features, query, query)
             distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy(),
                                 k1=rr_topk, k2=1, lambda_value=lambda_value)
 
-        return evaluate_all(distmat, ground_truth, gallery, nms=nms)
+            return evaluate_all(distmat, ground_truth, gallery, nms=nms)
